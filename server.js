@@ -53,12 +53,13 @@ app.get("/todo", (req, resp) => {
 });
 
 app.post("/signup", (req, resp) => {
+  let encryptPass
   const { user_name, user_email, user_password } = req.body;
   bcrypt.hash(user_password,process.env.SALT,(err,res)=>{
      if(err){
       console.log("Error while encryption of Password")
      }else{
-      const encryptPass=res
+      encryptPass=res
      }
   })
   if (user_name == null || user_email == null || user_password == null) {
@@ -68,7 +69,7 @@ app.post("/signup", (req, resp) => {
     "insert into todoUsers(user_name,user_email,user_password) values(?,?,?);";
   dataBase.query(
     statement,
-    [user_name, user_email, user_password],
+    [user_name, user_email, encryptPass],
     (err, res) => {
       if (err) {
         console.log(err);
